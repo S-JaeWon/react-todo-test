@@ -1,11 +1,18 @@
 import "./App.css";
+import TodoAdd from "./components/TodoAdd/TodoAdd";
+import TodoHead from "./components/TodoHead/TodoHead";
+import TodoList from "./components/TodoList/TodoList";
+import TodoTemplete from "./components/TodoTemplete/TodoTemplete";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Todo List 기술과제</h1>
-      <input />
-    </div>
+    <>
+      <TodoTemplete>
+        <TodoHead />
+        <TodoList />
+        <TodoAdd />
+      </TodoTemplete>
+    </>
   );
 }
 
