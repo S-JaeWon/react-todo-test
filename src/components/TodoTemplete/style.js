@@ -1,5 +1,9 @@
 import { css } from "@emotion/react";
 
+export const rootlayout = css`
+    background-color: gray;
+`
+
 export const templete = css`
     width: 512px;
     height: 768px;

@@ -1,14 +1,39 @@
 /** @jsxImportSource @emotion/react */
 import * as S from "./style";
-import TodoItem from "../TodoItem/style";
+import TodoItem from "../TodoItem/TodoItem";
+import { useState } from "react";
 
 function TodoList() {
+    const [todos, setTodos] = useState([
+        {
+            id: null,
+            text: "",
+            done: false
+        }
+    ]);
+
+    const removeTodo = (id) => {
+        // setTodos(todos.filter(todo => todo.id !== id)); 
+    };
+
+    const editTodo = (id) => {
+
+    };
+
     return (
         <div css={S.list}>
-            <TodoItem text="할일1" done={true}/>
-            <TodoItem text="할일2" done={true}/>
-            <TodoItem text="할일3" done={false}/>
-            <TodoItem text="할일4" done={false}/>
+            {
+                todos.map((todo) => (
+                    <TodoItem 
+                        key={todo.id}
+                        id={todo.id}
+                        text={todo.text}
+                        done={todo.done}
+                        removeTodo={removeTodo}
+                        editTodo={editTodo}
+                    />
+                ))
+            }
         </div>
     );
 }
