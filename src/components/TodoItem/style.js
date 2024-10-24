@@ -16,4 +16,5 @@ export const text = css`
 
 export const done = css`
   color: gray;
+  text-decoration: line-through;
 `;

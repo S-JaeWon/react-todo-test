@@ -2,12 +2,30 @@
 import * as S from "./style";
 import TodoItem from "../TodoItem/TodoItem";
 import TodoAdd from "../TodoAdd/TodoAdd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
-  const [isEditing, setIsEditing] = useState(null); // 수정 중인 투두의 ID 저장
+  const [isEditing, setIsEditing] = useState(null); 
   const [editTodo, setEditTodo] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("todos", JSON.stringify(todos));
+  // }, [todos]);
+
+  useEffect(() => { // 로컬 스토리지에 값은(배열로) 들어가나, 새로고침하면 빈배열로 반환되는 문제가생김. gpt 도움으로 아래처럼 바꿔서 해결함
+    if (todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }, [todos]);
 
   const onAddTodo = (text) => {
     const newTodo = {
@@ -45,24 +63,45 @@ function TodoList() {
     setEditTodo("");
   };
 
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "completed") return todo.done;
+    if (filter === "incomplete") return !todo.done;
+    return true; // "all"인 경우
+  });
+
   return (
-    <div css={S.list}>
-      {todos.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          id={todo.id}
-          text={todo.text}
-          done={todo.done}
-          onToggleTodo={onToggleTodo}
-          onRemoveTodo={onRemoveTodo}
-          isEditing={isEditing}
-          editValue={editTodo}
-          setEditValue={setEditTodo}
-          startEditTodo={startEditTodo}
-          onEditTodo={onEditTodo}
-        />
-      ))}
-      <TodoAdd onAddTodo={onAddTodo} />
+    <div>
+      <div>
+        <label htmlFor="filter-select">필터: </label>
+        <select
+          id="filter-select"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">전체</option>
+          <option value="completed">완료</option>
+          <option value="incomplete">미완료</option>
+        </select>
+      </div>
+      {/* selectbox 렌더링 부분은 gpt를 이용하여 만들었음 */}
+      <div css={S.list}>
+        {filteredTodos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            id={todo.id}
+            text={todo.text}
+            done={todo.done}
+            onToggleTodo={onToggleTodo}
+            onRemoveTodo={onRemoveTodo}
+            isEditing={isEditing}
+            editValue={editTodo}
+            setEditValue={setEditTodo}
+            startEditTodo={startEditTodo}
+            onEditTodo={onEditTodo}
+          />
+        ))}
+        <TodoAdd onAddTodo={onAddTodo} />
+      </div>
     </div>
   );
 }
